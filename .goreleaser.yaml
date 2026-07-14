@@ -29,12 +29,10 @@ universal_binaries:
 archives:
   - id: default
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    formats:
-      - tar.gz
+    format: tar.gz
     format_overrides:
       - goos: windows
-        formats:
-          - zip
+        format: zip
     files:
       - README.md
       - LICENSE
@@ -57,7 +55,7 @@ nfpms:
       - src: README.md
         dst: /usr/share/doc/racore-cli/README.md
 
-homebrew:
+brews:
   - name: racore-cli
     repository:
       owner: yingcaihuang
@@ -67,11 +65,11 @@ homebrew:
     homepage: https://github.com/yingcaihuang/Racore-cli
     description: Racore Cloud CDN CLI with MCP protocol support for AI agents
     license: MIT
+    skip_upload: auto
     install: |
       bin.install "racore-cli"
     test: |
       system "#{bin}/racore-cli", "--version"
-    skip_upload: auto
 
 checksum:
   name_template: "checksums.txt"
