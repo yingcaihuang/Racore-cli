@@ -28,6 +28,18 @@ type statsTopQueryParams struct {
 var statsCmd = &cobra.Command{
 	Use:   "stats",
 	Short: "CDN statistics and analytics",
+	Example: `  # Query flow statistics
+  racore-cli stats flow --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com
+
+  # Query request count
+  racore-cli stats request --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com
+
+  # Top URLs (by scope)
+  racore-cli stats top-url --scope yesterday
+  racore-cli stats top-referer --scope month
+
+  # ISO country codes
+  racore-cli stats iso-country`,
 }
 
 // --- stats flow ---
@@ -35,6 +47,7 @@ var statsCmd = &cobra.Command{
 var statsFlowCmd = &cobra.Command{
 	Use:   "flow",
 	Short: "Query CDN flow statistics",
+	Example: `  racore-cli stats flow --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -89,6 +102,7 @@ func executeStatsFlow(startTime, endTime string, domains []string, interval stri
 var statsRequestCmd = &cobra.Command{
 	Use:   "request",
 	Short: "Query CDN request statistics",
+	Example: `  racore-cli stats request --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -143,6 +157,7 @@ func executeStatsRequest(startTime, endTime string, domains []string, interval s
 var statsHitFlowCmd = &cobra.Command{
 	Use:   "hit-flow",
 	Short: "Query CDN hit flow statistics",
+	Example: `  racore-cli stats hit-flow --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -195,6 +210,7 @@ func executeStatsHitFlow(startTime, endTime string, domains []string) (string, e
 var statsHitRequestCmd = &cobra.Command{
 	Use:   "hit-request",
 	Short: "Query CDN hit request statistics",
+	Example: `  racore-cli stats hit-request --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -247,6 +263,7 @@ func executeStatsHitRequest(startTime, endTime string, domains []string) (string
 var statsHTTPCodeCmd = &cobra.Command{
 	Use:   "http-code",
 	Short: "Query CDN HTTP status code statistics",
+	Example: `  racore-cli stats http-code --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -299,6 +316,7 @@ func executeStatsHTTPCode(startTime, endTime string, domains []string) (string, 
 var statsHTTPCodeDetailCmd = &cobra.Command{
 	Use:   "http-code-detail",
 	Short: "Query CDN HTTP status code detail statistics",
+	Example: `  racore-cli stats http-code-detail --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -351,6 +369,7 @@ func executeStatsHTTPCodeDetail(startTime, endTime string, domains []string) (st
 var statsDistrictCmd = &cobra.Command{
 	Use:   "district",
 	Short: "Query CDN district statistics",
+	Example: `  racore-cli stats district --start-time "2026-07-01" --end-time "2026-07-14" --domains example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -401,8 +420,9 @@ func executeStatsDistrict(startTime, endTime string, domains []string) (string, 
 // --- stats iso-country ---
 
 var statsISOCountryCmd = &cobra.Command{
-	Use:   "iso-country",
-	Short: "List ISO country codes",
+	Use:     "iso-country",
+	Short:   "List ISO country codes",
+	Example: `  racore-cli stats iso-country`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		result, err := executeStatsISOCountry()
 		if err != nil {
@@ -441,6 +461,7 @@ func executeStatsISOCountry() (string, error) {
 var statsTopDomainCmd = &cobra.Command{
 	Use:   "top-domain",
 	Short: "Query top domains by traffic",
+	Example: `  racore-cli stats top-domain --start-time "2026-07-01" --end-time "2026-07-14"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -486,6 +507,11 @@ func executeStatsTopDomain(startTime, endTime string) (string, error) {
 var statsTopURLCmd = &cobra.Command{
 	Use:   "top-url",
 	Short: "Query top URLs by traffic",
+	Example: `  # By scope
+  racore-cli stats top-url --scope yesterday
+
+  # By date range
+  racore-cli stats top-url --start-time "2026-07-01 00:00" --end-time "2026-07-14 00:00"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -535,6 +561,7 @@ func executeStatsTopURL(startTime, endTime, scope, sorted string) (string, error
 var statsTopRefererCmd = &cobra.Command{
 	Use:   "top-referer",
 	Short: "Query top referers by traffic",
+	Example: `  racore-cli stats top-referer --scope month --sorted referer_count`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -584,6 +611,7 @@ func executeStatsTopReferer(startTime, endTime, scope, sorted string) (string, e
 var statsTopUACmd = &cobra.Command{
 	Use:   "top-ua",
 	Short: "Query top user agents by traffic",
+	Example: `  racore-cli stats top-ua --scope yesterday`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		startTime, _ := cmd.Flags().GetString("start-time")
 		endTime, _ := cmd.Flags().GetString("end-time")
@@ -632,45 +660,45 @@ func executeStatsTopUA(startTime, endTime, scope, sorted string) (string, error)
 
 func init() {
 	// stats flow flags
-	statsFlowCmd.Flags().String("start-time", "", "Start time for the query")
-	statsFlowCmd.Flags().String("end-time", "", "End time for the query")
-	statsFlowCmd.Flags().String("domains", "", "Comma-separated list of domains")
-	statsFlowCmd.Flags().String("interval", "", "Time interval for aggregation")
+	statsFlowCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsFlowCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsFlowCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
+	statsFlowCmd.Flags().String("interval", "", "Time interval for aggregation (e.g., 5min, 1hour, 1day)")
 
 	// stats request flags
-	statsRequestCmd.Flags().String("start-time", "", "Start time for the query")
-	statsRequestCmd.Flags().String("end-time", "", "End time for the query")
-	statsRequestCmd.Flags().String("domains", "", "Comma-separated list of domains")
-	statsRequestCmd.Flags().String("interval", "", "Time interval for aggregation")
+	statsRequestCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsRequestCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsRequestCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
+	statsRequestCmd.Flags().String("interval", "", "Time interval for aggregation (e.g., 5min, 1hour, 1day)")
 
 	// stats hit-flow flags
-	statsHitFlowCmd.Flags().String("start-time", "", "Start time for the query")
-	statsHitFlowCmd.Flags().String("end-time", "", "End time for the query")
-	statsHitFlowCmd.Flags().String("domains", "", "Comma-separated list of domains")
+	statsHitFlowCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHitFlowCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHitFlowCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
 
 	// stats hit-request flags
-	statsHitRequestCmd.Flags().String("start-time", "", "Start time for the query")
-	statsHitRequestCmd.Flags().String("end-time", "", "End time for the query")
-	statsHitRequestCmd.Flags().String("domains", "", "Comma-separated list of domains")
+	statsHitRequestCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHitRequestCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHitRequestCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
 
 	// stats http-code flags
-	statsHTTPCodeCmd.Flags().String("start-time", "", "Start time for the query")
-	statsHTTPCodeCmd.Flags().String("end-time", "", "End time for the query")
-	statsHTTPCodeCmd.Flags().String("domains", "", "Comma-separated list of domains")
+	statsHTTPCodeCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHTTPCodeCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHTTPCodeCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
 
 	// stats http-code-detail flags
-	statsHTTPCodeDetailCmd.Flags().String("start-time", "", "Start time for the query")
-	statsHTTPCodeDetailCmd.Flags().String("end-time", "", "End time for the query")
-	statsHTTPCodeDetailCmd.Flags().String("domains", "", "Comma-separated list of domains")
+	statsHTTPCodeDetailCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHTTPCodeDetailCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsHTTPCodeDetailCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
 
 	// stats district flags
-	statsDistrictCmd.Flags().String("start-time", "", "Start time for the query")
-	statsDistrictCmd.Flags().String("end-time", "", "End time for the query")
-	statsDistrictCmd.Flags().String("domains", "", "Comma-separated list of domains")
+	statsDistrictCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsDistrictCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsDistrictCmd.Flags().String("domains", "", "Comma-separated list of domains to query")
 
 	// stats top-domain flags
-	statsTopDomainCmd.Flags().String("start-time", "", "Start time for the query")
-	statsTopDomainCmd.Flags().String("end-time", "", "End time for the query")
+	statsTopDomainCmd.Flags().String("start-time", "", "Start time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
+	statsTopDomainCmd.Flags().String("end-time", "", "End time (yyyy-mm-dd or yyyy-mm-dd hh:mm)")
 
 	// stats top-url flags
 	statsTopURLCmd.Flags().String("start-time", "", "Start time for the query (yyyy-mm-dd hh:mm)")

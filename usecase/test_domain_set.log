@@ -1,0 +1,319 @@
+══════════════════════════════════════════════════
+ Domain SET Operations Test
+ Domain: v6.bbc.cfai.work
+══════════════════════════════════════════════════
+
+Building binary...
+go build -o racore-cli .
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Pre-check: Verify domain exists
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 1][0m Domain exists check
+  [0;36mCMD:[0m ./racore-cli domain list --filter v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > DOMAIN            CNAME                             TYPE     STATUS
+  > v6.bbc.cfai.work  v6.bbc.cfai.work.datalinkcdn.net  OVERSEA  
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ HTTP/2: Toggle off → verify → on → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 2][0m HTTP/2 SET (disable)
+  [0;36mCMD:[0m ./racore-cli domain http2 set --domain v6.bbc.cfai.work --config {"enable":"off"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 3][0m HTTP/2 GET (verify off)
+  [0;36mCMD:[0m ./racore-cli domain http2 get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "off"
+  > }
+
+[1;33m[STEP 4][0m HTTP/2 SET (re-enable)
+  [0;36mCMD:[0m ./racore-cli domain http2 set --domain v6.bbc.cfai.work --config {"enable":"on"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 5][0m HTTP/2 GET (verify on)
+  [0;36mCMD:[0m ./racore-cli domain http2 get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "on"
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ HTTP/3: Toggle off → verify → on → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 6][0m HTTP/3 SET (disable)
+  [0;36mCMD:[0m ./racore-cli domain http3 set --domain v6.bbc.cfai.work --config {"enable":"off"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 7][0m HTTP/3 GET (verify off)
+  [0;36mCMD:[0m ./racore-cli domain http3 get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "off"
+  > }
+
+[1;33m[STEP 8][0m HTTP/3 SET (re-enable)
+  [0;36mCMD:[0m ./racore-cli domain http3 set --domain v6.bbc.cfai.work --config {"enable":"on"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 9][0m HTTP/3 GET (verify on)
+  [0;36mCMD:[0m ./racore-cli domain http3 get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "on"
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Enforce HTTPS: GET only (requires SSL enabled)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 10][0m Enforce HTTPS GET
+  [0;36mCMD:[0m ./racore-cli domain enforce-https get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work"
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Compression: Toggle off → verify → on → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 11][0m Compress SET (disable)
+  [0;36mCMD:[0m ./racore-cli domain compress set --domain v6.bbc.cfai.work --config {"enable":"off"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 12][0m Compress GET (verify off)
+  [0;36mCMD:[0m ./racore-cli domain compress get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "off"
+  > }
+
+[1;33m[STEP 13][0m Compress SET (re-enable)
+  [0;36mCMD:[0m ./racore-cli domain compress set --domain v6.bbc.cfai.work --config {"enable":"on"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 14][0m Compress GET (verify on)
+  [0;36mCMD:[0m ./racore-cli domain compress get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "on"
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ IPv6: Toggle 0 → verify → 1 → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 15][0m IPv6 SET (disable)
+  [0;36mCMD:[0m ./racore-cli domain ipv6 set --domain v6.bbc.cfai.work --config {"enable":"0"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 16][0m IPv6 GET (verify 0)
+  [0;36mCMD:[0m ./racore-cli domain ipv6 get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "0"
+  > }
+
+[1;33m[STEP 17][0m IPv6 SET (re-enable)
+  [0;36mCMD:[0m ./racore-cli domain ipv6 set --domain v6.bbc.cfai.work --config {"enable":"1"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 18][0m IPv6 GET (verify 1)
+  [0;36mCMD:[0m ./racore-cli domain ipv6 get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "enable": "1"
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ TLS Version: Toggle TLSv1 → verify → TLSv1.2_2021 → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 19][0m TLS Version SET (TLSv1)
+  [0;36mCMD:[0m ./racore-cli domain tls-version set --domain v6.bbc.cfai.work --config {"min_tls_version":"TLSv1"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 20][0m TLS Version GET (verify TLSv1)
+  [0;36mCMD:[0m ./racore-cli domain tls-version get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "min_tls_version": "TLSv1"
+  > }
+
+[1;33m[STEP 21][0m TLS Version SET (TLSv1.2_2021)
+  [0;36mCMD:[0m ./racore-cli domain tls-version set --domain v6.bbc.cfai.work --config {"min_tls_version":"TLSv1.2_2021"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 22][0m TLS Version GET (verify TLSv1.2_2021)
+  [0;36mCMD:[0m ./racore-cli domain tls-version get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "min_tls_version": "TLSv1.2_2021"
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Origin Protocol: Toggle match-viewer → verify → https-only → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 23][0m Origin Protocol SET (match-viewer)
+  [0;36mCMD:[0m ./racore-cli domain origin-protocol set --domain v6.bbc.cfai.work --config {"origin_protocol_policy":"match-viewer","origin_protocol_http_port":"80","origin_protocol_https_port":"443"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 24][0m Origin Protocol GET (verify match-viewer)
+  [0;36mCMD:[0m ./racore-cli domain origin-protocol get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "origin_protocol_policy": "match-viewer",
+  >   "origin_protocol_http_port": 80,
+
+[1;33m[STEP 25][0m Origin Protocol SET (https-only)
+  [0;36mCMD:[0m ./racore-cli domain origin-protocol set --domain v6.bbc.cfai.work --config {"origin_protocol_policy":"https-only","origin_protocol_http_port":"80","origin_protocol_https_port":"443"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 26][0m Origin Protocol GET (verify https-only)
+  [0;36mCMD:[0m ./racore-cli domain origin-protocol get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "origin_protocol_policy": "https-only",
+  >   "origin_protocol_http_port": 80,
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Origin Host: Toggle type 1 → verify → type 3 → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 27][0m Origin Host SET (type 1 - origin server)
+  [0;36mCMD:[0m ./racore-cli domain origin-host set --domain v6.bbc.cfai.work --config {"origin_host_type":"1"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 28][0m Origin Host GET (verify type 1)
+  [0;36mCMD:[0m ./racore-cli domain origin-host get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "origin_host_type": "1",
+  >   "origin_host": "www2.myccdn.info"
+
+[1;33m[STEP 29][0m Origin Host SET (type 3 - custom)
+  [0;36mCMD:[0m ./racore-cli domain origin-host set --domain v6.bbc.cfai.work --config {"origin_host_type":"3","origin_host":"www2.myccdn.info"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 30][0m Origin Host GET (verify type 3)
+  [0;36mCMD:[0m ./racore-cli domain origin-host get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "origin_host_type": "3",
+  >   "origin_host": "www2.myccdn.info"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ IP Filter: Set whitelist → verify → disable → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 31][0m IP Filter SET (whitelist: 1.2.3.4)
+  [0;36mCMD:[0m ./racore-cli domain ip-filter set --domain v6.bbc.cfai.work --config {"state":"on","type":"white","value":["1.2.3.4"]}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 32][0m IP Filter GET (after set)
+  [0;36mCMD:[0m ./racore-cli domain ip-filter get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "domain": "v6.bbc.cfai.work",
+  >   "state": "on",
+  >   "value": []
+  > }
+
+[1;33m[STEP 33][0m IP Filter SET (disable)
+  [0;36mCMD:[0m ./racore-cli domain ip-filter set --domain v6.bbc.cfai.work --config {"state":"off","value":[]}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 34][0m IP Filter GET (after disable)
+  [0;36mCMD:[0m ./racore-cli domain ip-filter get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "domain": "v6.bbc.cfai.work",
+  >   "state": "off",
+  >   "value": []
+  > }
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Referer Filter: Set whitelist → verify → disable → verify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1;33m[STEP 35][0m Referer Filter SET (whitelist: example.com)
+  [0;36mCMD:[0m ./racore-cli domain referer-filter set --domain v6.bbc.cfai.work --config {"state":"on","type":"white","values":["example.com"],"allow_empty":"on"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 36][0m Referer Filter GET (after set)
+  [0;36mCMD:[0m ./racore-cli domain referer-filter get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "domain": "v6.bbc.cfai.work",
+  >   "state": "on",
+
+[1;33m[STEP 37][0m Referer Filter SET (disable)
+  [0;36mCMD:[0m ./racore-cli domain referer-filter set --domain v6.bbc.cfai.work --config {"state":"off","type":"off","values":["example.com"],"allow_empty":"on"}
+  [0;32m✓ PASS[0m
+  > Configuration updated successfully.
+
+[1;33m[STEP 38][0m Referer Filter GET (after disable)
+  [0;36mCMD:[0m ./racore-cli domain referer-filter get --domain v6.bbc.cfai.work
+  [0;32m✓ PASS[0m
+  > {
+  >   "id": "2227",
+  >   "name": "v6.bbc.cfai.work",
+  >   "domain": "v6.bbc.cfai.work",
+  >   "state": "off",
+
+
+══════════════════════════════════════════════════
+ TEST SUMMARY
+══════════════════════════════════════════════════
+ Total:  38
+ [0;32mPassed: 38[0m
+ [0;31mFailed: 0[0m
+══════════════════════════════════════════════════
+
+ Domain: [0;36mv6.bbc.cfai.work[0m
+
+[0;32mAll SET operations passed![0m

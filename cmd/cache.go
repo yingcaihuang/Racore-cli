@@ -11,11 +11,24 @@ import (
 var cacheCmd = &cobra.Command{
 	Use:   "cache",
 	Short: "Cache management operations",
+	Example: `  # Purge URLs
+  racore-cli cache purge --urls "https://example.com/path1,https://example.com/path2"
+
+  # Check purge status
+  racore-cli cache purge-status --task-id abc123
+
+  # Prefetch URLs
+  racore-cli cache prefetch --urls "https://example.com/bigfile.zip"
+
+  # List cache policies
+  racore-cli cache list-policies --domain example.com
+  racore-cli cache list-policies --domain example.com --type custom`,
 }
 
 var cachePurgeCmd = &cobra.Command{
 	Use:   "purge",
 	Short: "Purge cached URLs from CDN edge nodes",
+	Example: `  racore-cli cache purge --urls "https://example.com/path1,https://example.com/path2"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		urlsStr, _ := cmd.Flags().GetString("urls")
 		if urlsStr == "" {
@@ -32,8 +45,9 @@ var cachePurgeCmd = &cobra.Command{
 }
 
 var cachePurgeStatusCmd = &cobra.Command{
-	Use:   "purge-status",
-	Short: "Check the status of a purge task",
+	Use:     "purge-status",
+	Short:   "Check the status of a purge task",
+	Example: `  racore-cli cache purge-status --task-id abc123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		taskID, _ := cmd.Flags().GetString("task-id")
 		if taskID == "" {
@@ -51,6 +65,7 @@ var cachePurgeStatusCmd = &cobra.Command{
 var cachePrefetchCmd = &cobra.Command{
 	Use:   "prefetch",
 	Short: "Prefetch URLs to CDN edge nodes",
+	Example: `  racore-cli cache prefetch --urls "https://example.com/file.zip" --region us-east-1`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		urlsStr, _ := cmd.Flags().GetString("urls")
 		if urlsStr == "" {
@@ -69,8 +84,9 @@ var cachePrefetchCmd = &cobra.Command{
 }
 
 var cachePrefetchStatusCmd = &cobra.Command{
-	Use:   "prefetch-status",
-	Short: "Check the status of a prefetch task",
+	Use:     "prefetch-status",
+	Short:   "Check the status of a prefetch task",
+	Example: `  racore-cli cache prefetch-status --task-id abc123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		taskID, _ := cmd.Flags().GetString("task-id")
 		if taskID == "" {
@@ -86,8 +102,9 @@ var cachePrefetchStatusCmd = &cobra.Command{
 }
 
 var cachePrewarmRegionsCmd = &cobra.Command{
-	Use:   "prewarm-regions",
-	Short: "Get available prewarm regions for a URL",
+	Use:     "prewarm-regions",
+	Short:   "Get available prewarm regions for a URL",
+	Example: `  racore-cli cache prewarm-regions --url "https://example.com/"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		url, _ := cmd.Flags().GetString("url")
 		if url == "" {
@@ -103,8 +120,9 @@ var cachePrewarmRegionsCmd = &cobra.Command{
 }
 
 var cachePrewarmPopCmd = &cobra.Command{
-	Use:   "prewarm-pop",
-	Short: "Get prewarm PoP nodes for a region",
+	Use:     "prewarm-pop",
+	Short:   "Get prewarm PoP nodes for a region",
+	Example: `  racore-cli cache prewarm-pop --region us-east-1`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		region, _ := cmd.Flags().GetString("region")
 		if region == "" {
@@ -122,6 +140,11 @@ var cachePrewarmPopCmd = &cobra.Command{
 var cacheListPoliciesCmd = &cobra.Command{
 	Use:   "list-policies",
 	Short: "List available cache policies",
+	Example: `  # List managed policies
+  racore-cli cache list-policies --domain example.com
+
+  # List custom policies
+  racore-cli cache list-policies --domain example.com --type custom`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		domain, _ := cmd.Flags().GetString("domain")
 		if domain == "" {
@@ -138,8 +161,9 @@ var cacheListPoliciesCmd = &cobra.Command{
 }
 
 var cacheListOriginRequestPoliciesCmd = &cobra.Command{
-	Use:   "list-origin-request-policies",
-	Short: "List available origin request policies",
+	Use:     "list-origin-request-policies",
+	Short:   "List available origin request policies",
+	Example: `  racore-cli cache list-origin-request-policies --domain example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		domain, _ := cmd.Flags().GetString("domain")
 		if domain == "" {
@@ -156,8 +180,9 @@ var cacheListOriginRequestPoliciesCmd = &cobra.Command{
 }
 
 var cacheListResponseHeaderPoliciesCmd = &cobra.Command{
-	Use:   "list-response-header-policies",
-	Short: "List available response header policies",
+	Use:     "list-response-header-policies",
+	Short:   "List available response header policies",
+	Example: `  racore-cli cache list-response-header-policies --domain example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		domain, _ := cmd.Flags().GetString("domain")
 		if domain == "" {
@@ -175,14 +200,14 @@ var cacheListResponseHeaderPoliciesCmd = &cobra.Command{
 
 func init() {
 	// Register flags
-	cachePurgeCmd.Flags().String("urls", "", "Comma-separated list of URLs to purge")
-	cachePurgeStatusCmd.Flags().String("task-id", "", "Purge task ID to check status")
-	cachePrefetchCmd.Flags().String("urls", "", "Comma-separated list of URLs to prefetch")
-	cachePrefetchCmd.Flags().String("region", "", "Target region for prefetch")
-	cachePrefetchCmd.Flags().String("country", "", "Target country for prefetch")
-	cachePrefetchStatusCmd.Flags().String("task-id", "", "Prefetch task ID to check status")
-	cachePrewarmRegionsCmd.Flags().String("url", "", "URL to get prewarm regions for")
-	cachePrewarmPopCmd.Flags().String("region", "", "Region to get prewarm PoP nodes for")
+	cachePurgeCmd.Flags().String("urls", "", "Comma-separated list of URLs to purge from CDN cache")
+	cachePurgeStatusCmd.Flags().String("task-id", "", "Purge task ID returned from purge command")
+	cachePrefetchCmd.Flags().String("urls", "", "Comma-separated list of URLs to prefetch to edge nodes")
+	cachePrefetchCmd.Flags().String("region", "", "Target region for prefetch (e.g., us-east-1)")
+	cachePrefetchCmd.Flags().String("country", "", "Target country code for prefetch")
+	cachePrefetchStatusCmd.Flags().String("task-id", "", "Prefetch task ID returned from prefetch command")
+	cachePrewarmRegionsCmd.Flags().String("url", "", "URL to query available prewarm regions for")
+	cachePrewarmPopCmd.Flags().String("region", "", "Region to list prewarm PoP nodes for")
 	cacheListPoliciesCmd.Flags().String("domain", "", "CDN domain name (required)")
 	cacheListPoliciesCmd.Flags().String("type", "managed", "Policy type: managed or custom")
 	cacheListOriginRequestPoliciesCmd.Flags().String("domain", "", "CDN domain name (required)")

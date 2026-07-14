@@ -11,11 +11,26 @@ import (
 var certCmd = &cobra.Command{
 	Use:   "cert",
 	Short: "SSL certificate management",
+	Example: `  # List all certificates
+  racore-cli cert list
+
+  # Upload a certificate
+  racore-cli cert upload --name "My Cert" --cert-file ./cert.pem --key-file ./key.pem
+
+  # Update a certificate
+  racore-cli cert update --id 123 --cert-file ./new-cert.pem --key-file ./new-key.pem
+
+  # Apply for AWS certificate
+  racore-cli cert apply-aws --domain example.com
+
+  # Get validation info
+  racore-cli cert validation-info --id 123`,
 }
 
 var certListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all SSL certificates",
+	Use:     "list",
+	Short:   "List all SSL certificates",
+	Example: `  racore-cli cert list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		result, err := executeCertList()
 		if err != nil {
@@ -29,6 +44,7 @@ var certListCmd = &cobra.Command{
 var certUploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "Upload a new SSL certificate",
+	Example: `  racore-cli cert upload --name "My Cert" --cert-file ./cert.pem --key-file ./key.pem`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name, _ := cmd.Flags().GetString("name")
 		certFile, _ := cmd.Flags().GetString("cert-file")
@@ -46,6 +62,7 @@ var certUploadCmd = &cobra.Command{
 var certUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update an existing SSL certificate",
+	Example: `  racore-cli cert update --id 123 --cert-file ./new-cert.pem --key-file ./new-key.pem`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		certFile, _ := cmd.Flags().GetString("cert-file")
@@ -61,8 +78,9 @@ var certUpdateCmd = &cobra.Command{
 }
 
 var certApplyAWSCmd = &cobra.Command{
-	Use:   "apply-aws",
-	Short: "Apply for an AWS certificate",
+	Use:     "apply-aws",
+	Short:   "Apply for an AWS certificate",
+	Example: `  racore-cli cert apply-aws --domain example.com`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		domain, _ := cmd.Flags().GetString("domain")
 
@@ -76,8 +94,9 @@ var certApplyAWSCmd = &cobra.Command{
 }
 
 var certValidationInfoCmd = &cobra.Command{
-	Use:   "validation-info",
-	Short: "Get certificate validation information",
+	Use:     "validation-info",
+	Short:   "Get certificate validation information",
+	Example: `  racore-cli cert validation-info --id 123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 
@@ -92,27 +111,27 @@ var certValidationInfoCmd = &cobra.Command{
 
 func init() {
 	// Register flags for cert upload
-	certUploadCmd.Flags().String("name", "", "Certificate name")
-	certUploadCmd.Flags().String("cert-file", "", "Path to certificate file")
-	certUploadCmd.Flags().String("key-file", "", "Path to private key file")
+	certUploadCmd.Flags().String("name", "", "Display name for the certificate")
+	certUploadCmd.Flags().String("cert-file", "", "Path to PEM-encoded certificate file")
+	certUploadCmd.Flags().String("key-file", "", "Path to PEM-encoded private key file")
 	_ = certUploadCmd.MarkFlagRequired("name")
 	_ = certUploadCmd.MarkFlagRequired("cert-file")
 	_ = certUploadCmd.MarkFlagRequired("key-file")
 
 	// Register flags for cert update
-	certUpdateCmd.Flags().String("id", "", "Certificate ID")
-	certUpdateCmd.Flags().String("cert-file", "", "Path to certificate file")
-	certUpdateCmd.Flags().String("key-file", "", "Path to private key file")
+	certUpdateCmd.Flags().String("id", "", "Certificate ID to update")
+	certUpdateCmd.Flags().String("cert-file", "", "Path to new PEM-encoded certificate file")
+	certUpdateCmd.Flags().String("key-file", "", "Path to new PEM-encoded private key file")
 	_ = certUpdateCmd.MarkFlagRequired("id")
 	_ = certUpdateCmd.MarkFlagRequired("cert-file")
 	_ = certUpdateCmd.MarkFlagRequired("key-file")
 
 	// Register flags for cert apply-aws
-	certApplyAWSCmd.Flags().String("domain", "", "Domain to apply certificate for")
+	certApplyAWSCmd.Flags().String("domain", "", "Domain to apply AWS certificate for (e.g., example.com)")
 	_ = certApplyAWSCmd.MarkFlagRequired("domain")
 
 	// Register flags for cert validation-info
-	certValidationInfoCmd.Flags().String("id", "", "Certificate ID")
+	certValidationInfoCmd.Flags().String("id", "", "Certificate ID to get validation info for")
 	_ = certValidationInfoCmd.MarkFlagRequired("id")
 
 	// Add subcommands to cert

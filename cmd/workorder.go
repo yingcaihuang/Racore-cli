@@ -10,11 +10,26 @@ import (
 var workorderCmd = &cobra.Command{
 	Use:   "workorder",
 	Short: "Work order management",
+	Example: `  # List all work orders
+  racore-cli workorder list
+
+  # List work order types
+  racore-cli workorder types
+
+  # Create a work order
+  racore-cli workorder create --title "Issue" --description "Details" --type "技术支持"
+
+  # View communication log
+  racore-cli workorder log --id 123
+
+  # Send message
+  racore-cli workorder send-message --id 123 --message "Hello"`,
 }
 
 var workorderListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all work orders",
+	Use:     "list",
+	Short:   "List all work orders",
+	Example: `  racore-cli workorder list`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		output, err := executeWorkorderList()
 		if err != nil {
@@ -28,6 +43,7 @@ var workorderListCmd = &cobra.Command{
 var workorderCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new work order",
+	Example: `  racore-cli workorder create --title "Issue" --description "Details" --type "技术支持"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		title, _ := cmd.Flags().GetString("title")
 		description, _ := cmd.Flags().GetString("description")
@@ -42,8 +58,9 @@ var workorderCreateCmd = &cobra.Command{
 }
 
 var workorderReopenCmd = &cobra.Command{
-	Use:   "reopen",
-	Short: "Reopen a work order",
+	Use:     "reopen",
+	Short:   "Reopen a work order",
+	Example: `  racore-cli workorder reopen --id 123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		output, err := executeWorkorderReopen(id)
@@ -56,8 +73,9 @@ var workorderReopenCmd = &cobra.Command{
 }
 
 var workorderDeleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete a work order",
+	Use:     "delete",
+	Short:   "Delete a work order",
+	Example: `  racore-cli workorder delete --id 123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		output, err := executeWorkorderDelete(id)
@@ -70,8 +88,9 @@ var workorderDeleteCmd = &cobra.Command{
 }
 
 var workorderCancelCmd = &cobra.Command{
-	Use:   "cancel",
-	Short: "Cancel a work order",
+	Use:     "cancel",
+	Short:   "Cancel a work order",
+	Example: `  racore-cli workorder cancel --id 123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		output, err := executeWorkorderCancel(id)
@@ -84,8 +103,9 @@ var workorderCancelCmd = &cobra.Command{
 }
 
 var workorderCloseCmd = &cobra.Command{
-	Use:   "close",
-	Short: "Close a work order",
+	Use:     "close",
+	Short:   "Close a work order",
+	Example: `  racore-cli workorder close --id 123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		output, err := executeWorkorderClose(id)
@@ -98,8 +118,9 @@ var workorderCloseCmd = &cobra.Command{
 }
 
 var workorderTypesCmd = &cobra.Command{
-	Use:   "types",
-	Short: "List work order types/categories",
+	Use:     "types",
+	Short:   "List work order types/categories",
+	Example: `  racore-cli workorder types`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		output, err := executeWorkorderTypes()
 		if err != nil {
@@ -111,8 +132,9 @@ var workorderTypesCmd = &cobra.Command{
 }
 
 var workorderLogCmd = &cobra.Command{
-	Use:   "log",
-	Short: "View work order log",
+	Use:     "log",
+	Short:   "View work order log",
+	Example: `  racore-cli workorder log --id 123`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		output, err := executeWorkorderLog(id)
@@ -127,6 +149,7 @@ var workorderLogCmd = &cobra.Command{
 var workorderSendMessageCmd = &cobra.Command{
 	Use:   "send-message",
 	Short: "Send a message to a work order",
+	Example: `  racore-cli workorder send-message --id 123 --message "Hello"`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id, _ := cmd.Flags().GetString("id")
 		message, _ := cmd.Flags().GetString("message")
@@ -141,18 +164,18 @@ var workorderSendMessageCmd = &cobra.Command{
 
 func init() {
 	// Register flags
-	workorderCreateCmd.Flags().String("title", "", "Work order title")
-	workorderCreateCmd.Flags().String("description", "", "Work order description")
-	workorderCreateCmd.Flags().String("type", "", "Work order type")
+	workorderCreateCmd.Flags().String("title", "", "Work order title (required)")
+	workorderCreateCmd.Flags().String("description", "", "Detailed description of the issue")
+	workorderCreateCmd.Flags().String("type", "", "Work order type (use 'workorder types' to list available)")
 
-	workorderReopenCmd.Flags().String("id", "", "Work order ID")
-	workorderDeleteCmd.Flags().String("id", "", "Work order ID")
-	workorderCancelCmd.Flags().String("id", "", "Work order ID")
-	workorderCloseCmd.Flags().String("id", "", "Work order ID")
-	workorderLogCmd.Flags().String("id", "", "Work order ID")
+	workorderReopenCmd.Flags().String("id", "", "Work order ID to reopen")
+	workorderDeleteCmd.Flags().String("id", "", "Work order ID to delete")
+	workorderCancelCmd.Flags().String("id", "", "Work order ID to cancel")
+	workorderCloseCmd.Flags().String("id", "", "Work order ID to close")
+	workorderLogCmd.Flags().String("id", "", "Work order ID to view log for")
 
-	workorderSendMessageCmd.Flags().String("id", "", "Work order ID")
-	workorderSendMessageCmd.Flags().String("message", "", "Message to send")
+	workorderSendMessageCmd.Flags().String("id", "", "Work order ID to send message to")
+	workorderSendMessageCmd.Flags().String("message", "", "Message content to send")
 
 	// Register subcommands
 	workorderCmd.AddCommand(workorderListCmd)

@@ -90,8 +90,10 @@ func registerDomainTools(server *mcp.Server) {
 			"type": "object",
 			"properties": {
 				"domain": {"type": "string", "description": "Domain name to create"},
-				"type": {"type": "string", "description": "Domain type"},
-				"source": {"type": "string", "description": "Origin source address"}
+				"type": {"type": "string", "description": "CDN type: oversea, live, video/vod, dynamic, static, download, web/cdn"},
+				"source": {"type": "string", "description": "Origin source address (IP or domain)"},
+				"source_type": {"type": "string", "description": "Origin type: 1 (IP) or 2 (domain), default: 2"},
+				"cert_id": {"type": "string", "description": "SSL certificate ID to bind (enables HTTPS automatically)"}
 			},
 			"required": ["domain", "type", "source"]
 		}`),
@@ -778,9 +780,11 @@ func domainListHandler(params json.RawMessage) (interface{}, error) {
 
 func domainCreateHandler(params json.RawMessage) (interface{}, error) {
 	var input struct {
-		Domain string `json:"domain"`
-		Type   string `json:"type"`
-		Source string `json:"source"`
+		Domain     string `json:"domain"`
+		Type       string `json:"type"`
+		Source     string `json:"source"`
+		SourceType string `json:"source_type"`
+		CertID     string `json:"cert_id"`
 	}
 	if err := json.Unmarshal(params, &input); err != nil {
 		return nil, fmt.Errorf("invalid parameters: %w", err)
@@ -788,7 +792,11 @@ func domainCreateHandler(params json.RawMessage) (interface{}, error) {
 	if input.Domain == "" || input.Type == "" || input.Source == "" {
 		return makeErrorResult("domain, type, and source are required"), nil
 	}
-	output, err := executeDomainCreate(input.Domain, input.Type, input.Source)
+	sourceType := input.SourceType
+	if sourceType == "" {
+		sourceType = "2"
+	}
+	output, err := executeDomainCreate(input.Domain, input.Type, input.Source, sourceType, input.CertID)
 	if err != nil {
 		return makeErrorResult(err.Error()), nil
 	}

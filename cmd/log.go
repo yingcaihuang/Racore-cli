@@ -10,11 +10,21 @@ import (
 var logCmd = &cobra.Command{
 	Use:   "log",
 	Short: "CDN log download",
+	Example: `  # List log files
+  racore-cli log list --domain example.com
+
+  # List logs in date range
+  racore-cli log list --domain example.com --start-date 2026-07-01 --end-date 2026-07-14`,
 }
 
 var logListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List CDN log files",
+	Example: `  # List all log files for a domain
+  racore-cli log list --domain example.com
+
+  # List logs in date range
+  racore-cli log list --domain example.com --start-date 2026-07-01 --end-date 2026-07-14`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		domain, _ := cmd.Flags().GetString("domain")
 		startDate, _ := cmd.Flags().GetString("start-date")
@@ -30,9 +40,9 @@ var logListCmd = &cobra.Command{
 }
 
 func init() {
-	logListCmd.Flags().String("domain", "", "Domain name")
-	logListCmd.Flags().String("start-date", "", "Start date for log query")
-	logListCmd.Flags().String("end-date", "", "End date for log query")
+	logListCmd.Flags().String("domain", "", "CDN domain to query logs for")
+	logListCmd.Flags().String("start-date", "", "Start date for log query (yyyy-mm-dd)")
+	logListCmd.Flags().String("end-date", "", "End date for log query (yyyy-mm-dd)")
 	_ = logListCmd.MarkFlagRequired("domain")
 
 	logCmd.AddCommand(logListCmd)
