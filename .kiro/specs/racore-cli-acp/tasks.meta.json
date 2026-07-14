@@ -1,0 +1,379 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 初始化 Go module 和安装依赖": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579043
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994590762
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994706608
+      }
+    ],
+    "1.2 创建 main.go 入口与 panic recovery": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579186
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994716872
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994813653
+      }
+    ],
+    "1.3 创建 Cobra root 命令 (`cmd/root.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579230
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994717610
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994814508
+      }
+    ],
+    "2.1 实现凭证存储核心 (`internal/credential/store.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579273
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994824403
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994986196
+      }
+    ],
+    "2.3 实现凭证来源解析 (`internal/credential/resolve.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579328
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994825247
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994987164
+      }
+    ],
+    "3.1 实现认证管理器 (`internal/auth/auth.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579371
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994996725
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995124712
+      }
+    ],
+    "4.1 实现 API 客户端 (`internal/api/client.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579421
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995153670
+      }
+    ],
+    "5. Checkpoint - 核心模块验证": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579461
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995541892
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995590936
+      }
+    ],
+    "6.1 实现 login 命令 (`cmd/login.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579499
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995596804
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996189431
+      }
+    ],
+    "6.2 实现 whoami 命令 (`cmd/whoami.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579557
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995597468
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996190143
+      }
+    ],
+    "6.4 实现 logout 命令 (`cmd/logout.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579597
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995598284
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996190989
+      }
+    ],
+    "6.5 实现 domains 命令 (`cmd/domains.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579640
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996196350
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996310268
+      }
+    ],
+    "7.1 实现 JSON-RPC 类型定义 (`internal/acp/types.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579682
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996197258
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996310934
+      }
+    ],
+    "7.2 实现 ACP Server 核心 (`internal/acp/server.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579715
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996316167
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996427581
+      }
+    ],
+    "7.4 实现 serve 命令 (`cmd/serve.go`)": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579754
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996432495
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996677576
+      }
+    ],
+    "8. Checkpoint - 全功能验证": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579789
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996683511
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996754145
+      }
+    ],
+    "9.1 统一错误处理与退出码": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579824
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996759802
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996855811
+      }
+    ],
+    "10.1 创建 Makefile": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579865
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996860930
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996925004
+      }
+    ],
+    "11. Final checkpoint - 完整集成验证": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994579905
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996930417
+      },
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783997042679
+      }
+    ],
+    "1. 项目初始化与基础结构": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994814560
+      }
+    ],
+    "2. Credential Store 实现": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783994987197
+      }
+    ],
+    "3. Auth Manager 实现": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995124756
+      }
+    ],
+    "4. API Client 实现": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783995153724
+      }
+    ],
+    "6. CLI 命令实现": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996310309
+      }
+    ],
+    "7. ACP Server 实现": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996677631
+      }
+    ],
+    "9. 错误处理完善与集成": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996855862
+      }
+    ],
+    "10. Makefile 与构建配置": [
+      {
+        "executionId": "fb9564a4-331a-43d1-93a3-e7ed8ecdae37",
+        "chatSessionId": "sess_be4a7e22-2f9a-485b-aeed-e1644bc0bf1a",
+        "timestamp": 1783996925062
+      }
+    ]
+  }
+}

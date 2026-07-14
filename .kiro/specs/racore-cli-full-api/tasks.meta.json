@@ -1,0 +1,265 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Add `Put` and `Delete` methods to `internal/api/client.go`": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000261632
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000300250
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000376061
+      }
+    ],
+    "1.2 Create `cmd/helpers.go` with `newAuthenticatedClient()` and shared formatting utilities": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000261697
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000301594
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000376749
+      }
+    ],
+    "2.1 Create `cmd/domain.go` with all domain subcommands and execute functions": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000261747
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000382868
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000748175
+      }
+    ],
+    "3.1 Create `cmd/cache.go` with all cache subcommands and execute functions": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000261794
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000383685
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000748964
+      }
+    ],
+    "4.1 Create `cmd/stats.go` with all stats subcommands and execute functions": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000261886
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000384518
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000750094
+      }
+    ],
+    "5.1 Create `cmd/cert.go` with all cert subcommands and execute functions": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000261935
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000385308
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000750639
+      }
+    ],
+    "6.1 Create `cmd/workorder.go` with all workorder subcommands and execute functions": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000262199
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000386177
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001580499
+      }
+    ],
+    "7.1 Create `cmd/log.go` with log subcommands and execute functions": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000262286
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000757137
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001581108
+      }
+    ],
+    "8. Checkpoint - Verify CLI builds and commands register": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000262326
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001609976
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001659767
+      }
+    ],
+    "9.1 Update `cmd/serve.go` to register ACP tools for all new command groups": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000262384
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001665750
+      },
+      {
+        "executionId": "bbfe8401-6820-432a-9446-b975d7a5fad1",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784010804231
+      }
+    ],
+    "9.2 Delete `cmd/domains.go` and update `executeDomains` reference in serve.go": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000262444
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001666576
+      },
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001758047
+      }
+    ],
+    "10. Final checkpoint - Build, vet, and test": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000262525
+      },
+      {
+        "executionId": "bbfe8401-6820-432a-9446-b975d7a5fad1",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784010833605
+      },
+      {
+        "executionId": "bbfe8401-6820-432a-9446-b975d7a5fad1",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784010872874
+      }
+    ],
+    "1. Extend API client and create shared helper": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000376902
+      }
+    ],
+    "2. Implement domain command group (`cmd/domain.go`)": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000748241
+      }
+    ],
+    "3. Implement cache command group (`cmd/cache.go`)": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000749096
+      }
+    ],
+    "4. Implement statistics command group (`cmd/stats.go`)": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000750181
+      }
+    ],
+    "5. Implement certificate command group (`cmd/cert.go`)": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784000750705
+      }
+    ],
+    "6. Implement workorder command group (`cmd/workorder.go`)": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001580543
+      }
+    ],
+    "7. Implement log command group (`cmd/log.go`)": [
+      {
+        "executionId": "10a16727-32b4-420b-8542-1c001891060c",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784001581150
+      }
+    ],
+    "9. Register ACP tools and clean up": [
+      {
+        "executionId": "bbfe8401-6820-432a-9446-b975d7a5fad1",
+        "chatSessionId": "sess_ed98eb3c-40b1-4002-976a-dabbcb9935c7",
+        "timestamp": 1784010804599
+      }
+    ]
+  }
+}
