@@ -1,0 +1,90 @@
+version: 2
+
+project_name: racore-cli
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: racore-cli
+    main: .
+    binary: racore-cli
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+universal_binaries:
+  - id: racore-cli
+    replace: true
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+
+nfpms:
+  - id: packages
+    package_name: racore-cli
+    vendor: Racore Cloud
+    homepage: https://github.com/yingcaihuang/Racore-cli
+    maintainer: Racore Cloud <support@racorecloud.com>
+    description: Racore Cloud CDN CLI with MCP protocol support for AI agents
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin
+    contents:
+      - src: LICENSE
+        dst: /usr/share/doc/racore-cli/LICENSE
+      - src: README.md
+        dst: /usr/share/doc/racore-cli/README.md
+
+brews:
+  - name: racore-cli
+    repository:
+      owner: yingcaihuang
+      name: homebrew-tap
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    directory: Formula
+    homepage: https://github.com/yingcaihuang/Racore-cli
+    description: Racore Cloud CDN CLI with MCP protocol support for AI agents
+    license: MIT
+    install: |
+      bin.install "racore-cli"
+    test: |
+      system "#{bin}/racore-cli", "--version"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+
+release:
+  github:
+    owner: yingcaihuang
+    name: Racore-cli
+  prerelease: auto
+  name_template: "v{{.Version}}"

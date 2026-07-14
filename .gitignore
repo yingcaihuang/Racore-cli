@@ -30,3 +30,11 @@ __debug_bin*
 # Environment/secrets
 .env
 .env.*
+
+# GoReleaser
+dist/
+
+# Installer artifacts
+*.msi
+*.wixobj
+*.wixpdb

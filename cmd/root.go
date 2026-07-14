@@ -12,10 +12,15 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:           "racore-cli",
-	Short:         "Racore Cloud CDN management CLI with ACP protocol support",
+	Short:         "Racore Cloud CDN management CLI with MCP protocol support",
 	Version:       "0.1.0",
 	SilenceUsage:  true,
 	SilenceErrors: true,
+}
+
+// SetVersionInfo sets the version information from build-time ldflags.
+func SetVersionInfo(version, commit, date string) {
+	rootCmd.Version = fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, date)
 }
 
 // Execute runs the root command and handles errors.

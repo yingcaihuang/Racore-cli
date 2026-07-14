@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  windows-msi:
+    needs: release
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        goarch: [amd64, arm64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Build Windows binary
+        env:
+          GOOS: windows
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: "0"
+        run: |
+          go build -ldflags "-s -w -X main.version=${{ needs.release.outputs.version }} -X main.commit=${{ github.sha }} -X main.date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o racore-cli.exe .
+
+      - name: Create MSI installer
+        run: |
+          # Create WiX source file
+          @"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+            <Product Id="*" Name="Racore CLI" Language="1033" Version="${{ needs.release.outputs.version }}.0"
+                     Manufacturer="Racore Cloud" UpgradeCode="A1B2C3D4-E5F6-7890-ABCD-EF1234567890">
+              <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+              <MajorUpgrade DowngradeErrorMessage="A newer version is already installed." />
+              <MediaTemplate EmbedCab="yes" />
+
+              <Feature Id="ProductFeature" Title="Racore CLI" Level="1">
+                <ComponentGroupRef Id="ProductComponents" />
+                <ComponentRef Id="PathComponent" />
+              </Feature>
+
+              <Directory Id="TARGETDIR" Name="SourceDir">
+                <Directory Id="ProgramFiles64Folder">
+                  <Directory Id="INSTALLFOLDER" Name="Racore CLI">
+                  </Directory>
+                </Directory>
+              </Directory>
+
+              <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+                <Component Id="MainExecutable" Guid="*">
+                  <File Id="RacoreCLI" Source="racore-cli.exe" KeyPath="yes" />
+                </Component>
+              </ComponentGroup>
+
+              <Component Id="PathComponent" Directory="INSTALLFOLDER" Guid="B1C2D3E4-F5A6-7890-BCDE-F12345678901">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" Permanent="no" Part="last" Action="set" System="yes" />
+              </Component>
+            </Product>
+          </Wix>
+          "@ | Out-File -FilePath installer.wxs -Encoding UTF8
+
+          # Build MSI using WiX
+          & "${env:WIX}bin\candle.exe" installer.wxs -arch x64
+          & "${env:WIX}bin\light.exe" installer.wixobj -o "racore-cli_${{ needs.release.outputs.version }}_windows_${{ matrix.goarch }}.msi"
+        shell: pwsh
+
+      - name: Upload MSI to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "v${{ needs.release.outputs.version }}" "racore-cli_${{ needs.release.outputs.version }}_windows_${{ matrix.goarch }}.msi" --clobber

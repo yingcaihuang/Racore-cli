@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "description": "Racore Cloud CDN CLI with MCP protocol support for AI agents",
+  "homepage": "https://github.com/yingcaihuang/Racore-cli",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/yingcaihuang/Racore-cli/releases/download/v0.1.0/racore-cli_0.1.0_windows_amd64.zip",
+      "hash": "",
+      "bin": "racore-cli.exe"
+    },
+    "arm64": {
+      "url": "https://github.com/yingcaihuang/Racore-cli/releases/download/v0.1.0/racore-cli_0.1.0_windows_arm64.zip",
+      "hash": "",
+      "bin": "racore-cli.exe"
+    }
+  },
+  "checkver": "github",
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/yingcaihuang/Racore-cli/releases/download/v$version/racore-cli_$version_windows_amd64.zip"
+      },
+      "arm64": {
+        "url": "https://github.com/yingcaihuang/Racore-cli/releases/download/v$version/racore-cli_$version_windows_arm64.zip"
+      }
+    }
+  }
+}
