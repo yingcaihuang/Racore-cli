@@ -117,15 +117,16 @@ func registerDomainTools(server *mcp.Server) {
 
 	server.RegisterTool(mcp.ToolDefinition{
 		Name:        "domain-create",
-		Description: "Create a new CDN domain. If cert_id is not provided, automatically matches a wildcard SSL certificate from the cert list (e.g., *.example.com matches sub.example.com). To manually specify, first use cert-list to find the certificate ID.",
+		Description: "Create a new CDN domain with SSL certificate (required). Automatically matches a wildcard certificate from the cert list. If no matching cert is found, creation fails unless no_cert=true is explicitly set.",
 		InputSchema: json.RawMessage(`{
 			"type": "object",
 			"properties": {
 				"domain": {"type": "string", "description": "Domain name to create"},
-				"type": {"type": "string", "description": "CDN type: oversea, live, video/vod, dynamic, static, download, web/cdn"},
+				"type": {"type": "string", "description": "CDN type: oversea, live, video/vod, dynamic, static, download"},
 				"source": {"type": "string", "description": "Origin source address (IP or domain)"},
 				"source_type": {"type": "string", "description": "Origin type: 1 (IP) or 2 (domain), default: 2"},
-				"cert_id": {"type": "string", "description": "SSL certificate ID to bind (enables HTTPS automatically). If omitted, auto-matches wildcard cert from cert list."}
+				"cert_id": {"type": "string", "description": "SSL certificate ID. If not provided, auto-matches wildcard cert. Fails if no match found."},
+				"no_cert": {"type": "boolean", "description": "Skip SSL certificate binding (not recommended). Only set to true if you explicitly want no HTTPS."}
 			},
 			"required": ["domain", "type", "source"]
 		}`),
@@ -817,6 +818,7 @@ func domainCreateHandler(params json.RawMessage) (interface{}, error) {
 		Source     string `json:"source"`
 		SourceType string `json:"source_type"`
 		CertID     string `json:"cert_id"`
+		NoCert     bool   `json:"no_cert"`
 	}
 	if err := json.Unmarshal(params, &input); err != nil {
 		return nil, fmt.Errorf("invalid parameters: %w", err)
@@ -828,7 +830,7 @@ func domainCreateHandler(params json.RawMessage) (interface{}, error) {
 	if sourceType == "" {
 		sourceType = "2"
 	}
-	output, err := executeDomainCreate(input.Domain, input.Type, input.Source, sourceType, input.CertID)
+	output, err := executeDomainCreate(input.Domain, input.Type, input.Source, sourceType, input.CertID, input.NoCert)
 	if err != nil {
 		return makeErrorResult(err.Error()), nil
 	}

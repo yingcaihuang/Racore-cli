@@ -55,11 +55,14 @@ var domainListCmd = &cobra.Command{
 var domainCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new CDN domain",
-	Example: `  # Create domain with auto cert matching
+	Example: `  # Create domain (auto-matches wildcard SSL cert, required by default)
   racore-cli domain create --domain cdn.example.com --type oversea --source origin.example.com
 
   # Create with explicit cert ID
   racore-cli domain create --domain cdn.example.com --type static --source origin.example.com --cert-id 123
+
+  # Create without SSL (not recommended)
+  racore-cli domain create --domain cdn.example.com --type oversea --source origin.example.com --no-cert
 
   # Type options: oversea, live, video, dynamic, static, download`,
 	RunE: runDomainCreate,
@@ -788,7 +791,7 @@ func findMatchingCert(client *api.Client, domain string) (string, string, error)
 	return "", "", nil
 }
 
-func executeDomainCreate(domain, domainType, source, sourceType, certID string) (string, error) {
+func executeDomainCreate(domain, domainType, source, sourceType, certID string, noCert bool) (string, error) {
 	client, err := newAuthenticatedClient()
 	if err != nil {
 		return "", err
@@ -807,14 +810,19 @@ func executeDomainCreate(domain, domainType, source, sourceType, certID string) 
 		domainType = lowerType
 	}
 
-	// Auto-match certificate if not explicitly provided
+	// Certificate handling: required by default (AWS requires SSL)
 	certName := ""
-	if certID == "" {
+	if certID == "" && !noCert {
+		// Auto-match certificate
 		matchedID, matchedName, err := findMatchingCert(client, domain)
-		if err == nil && matchedID != "" {
-			certID = matchedID
-			certName = matchedName
+		if err != nil {
+			return "", fmt.Errorf("failed to search for matching certificate: %w", err)
 		}
+		if matchedID == "" {
+			return "", fmt.Errorf("no matching SSL certificate found for domain '%s'. Either:\n  1. Upload a certificate first: racore-cli cert upload --name \"*.example.com\" --cert-file cert.pem --key-file key.pem\n  2. Apply for an AWS certificate: racore-cli cert apply-aws --domain %s\n  3. Specify cert ID manually: --cert-id <id>\n  4. Skip SSL (not recommended): --no-cert", domain, domain)
+		}
+		certID = matchedID
+		certName = matchedName
 	}
 
 	isSSL := "0"
@@ -1009,12 +1017,13 @@ func runDomainCreate(cmd *cobra.Command, args []string) error {
 	source, _ := cmd.Flags().GetString("source")
 	certID, _ := cmd.Flags().GetString("cert-id")
 	sourceType, _ := cmd.Flags().GetString("source-type")
+	noCert, _ := cmd.Flags().GetBool("no-cert")
 
 	if domain == "" || domainType == "" || source == "" {
 		return fmt.Errorf("--domain, --type, and --source flags are required")
 	}
 
-	result, err := executeDomainCreate(domain, domainType, source, sourceType, certID)
+	result, err := executeDomainCreate(domain, domainType, source, sourceType, certID, noCert)
 	if err != nil {
 		return err
 	}
@@ -1111,6 +1120,7 @@ func init() {
 	domainCreateCmd.Flags().String("source", "", "Origin source address (IP or domain)")
 	domainCreateCmd.Flags().String("cert-id", "", "SSL certificate ID to bind (enables HTTPS)")
 	domainCreateCmd.Flags().String("source-type", "2", "Origin type: 1 (IP) or 2 (domain)")
+	domainCreateCmd.Flags().Bool("no-cert", false, "Skip SSL certificate binding (not recommended for production)")
 	domainDeleteCmd.Flags().String("domain", "", "CDN acceleration domain name (e.g., cdn.example.com)")
 	domainEnableCmd.Flags().String("domain", "", "CDN acceleration domain name (e.g., cdn.example.com)")
 	domainDisableCmd.Flags().String("domain", "", "CDN acceleration domain name (e.g., cdn.example.com)")
