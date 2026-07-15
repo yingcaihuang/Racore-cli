@@ -753,9 +753,10 @@ func findMatchingCert(client *api.Client, domain string) (string, string, error)
 	var resp struct {
 		Code int `json:"code"`
 		Data []struct {
-			ID     string `json:"id"`
-			Name   string `json:"name"`
-			Domain string `json:"domain"`
+			ID         string   `json:"id"`
+			Name       string   `json:"name"`
+			CommonName string   `json:"common_name"`
+			SANs       []string `json:"subject_altname"`
 		} `json:"data"`
 		Message string `json:"message"`
 	}
@@ -776,14 +777,28 @@ func findMatchingCert(client *api.Client, domain string) (string, string, error)
 	}
 
 	for _, cert := range resp.Data {
+		// Match against cert Name (e.g., "*.bbc.cfai.work")
+		certDomain := cert.Name
+
 		// Exact match
-		if strings.EqualFold(cert.Domain, domain) {
-			return cert.ID, cert.Domain, nil
+		if strings.EqualFold(certDomain, domain) {
+			return cert.ID, certDomain, nil
 		}
-		// Wildcard match
+		// Wildcard match against Name
 		for _, wc := range wildcards {
-			if strings.EqualFold(cert.Domain, wc) {
-				return cert.ID, cert.Domain, nil
+			if strings.EqualFold(certDomain, wc) {
+				return cert.ID, certDomain, nil
+			}
+		}
+		// Also check SANs (subject alternative names)
+		for _, san := range cert.SANs {
+			if strings.EqualFold(san, domain) {
+				return cert.ID, san, nil
+			}
+			for _, wc := range wildcards {
+				if strings.EqualFold(san, wc) {
+					return cert.ID, san, nil
+				}
 			}
 		}
 	}

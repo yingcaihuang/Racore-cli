@@ -159,10 +159,11 @@ func executeCertList() (string, error) {
 	var resp struct {
 		Code int `json:"code"`
 		Data []struct {
-			ID     string `json:"id"`
-			Name   string `json:"name"`
-			Domain string `json:"domain"`
-			Expiry string `json:"expiry"`
+			ID         string `json:"id"`
+			Name       string `json:"name"`
+			CommonName string `json:"common_name"`
+			ExpireTime string `json:"expire_time"`
+			State      string `json:"state"`
 		} `json:"data"`
 		Message string `json:"message"`
 	}
@@ -177,10 +178,10 @@ func executeCertList() (string, error) {
 		return "", fmt.Errorf("API error (code %d): %s", resp.Code, msg)
 	}
 
-	headers := []string{"ID", "NAME", "DOMAIN", "EXPIRY"}
+	headers := []string{"ID", "NAME", "DOMAIN", "STATE", "EXPIRY"}
 	rows := make([][]string, 0, len(resp.Data))
 	for _, c := range resp.Data {
-		rows = append(rows, []string{c.ID, c.Name, c.Domain, c.Expiry})
+		rows = append(rows, []string{c.ID, c.Name, c.CommonName, c.State, c.ExpireTime})
 	}
 	return formatTable(headers, rows), nil
 }
