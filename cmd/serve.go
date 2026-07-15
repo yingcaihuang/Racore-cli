@@ -48,6 +48,23 @@ var serveCmd = &cobra.Command{
 			os.Setenv("RACORE_SECRET_KEY", secretKey)
 		}
 
+		// Auto-login: if credentials are available (via env or flags) but not yet
+		// stored in keyring/file, perform login to persist them.
+		// This ensures MCP config credentials are also available for CLI usage.
+		envAK := os.Getenv("RACORE_ACCESS_KEY")
+		envSK := os.Getenv("RACORE_SECRET_KEY")
+		if envAK != "" && envSK != "" {
+			store, err := credential.NewStore()
+			if err == nil {
+				existing, _ := store.Load()
+				// Only auto-login if no stored creds or stored creds differ
+				if existing == nil || existing.AccessKey != envAK {
+					// Perform silent login - authenticate and save to keyring
+					_, _ = executeLogin(envAK, envSK)
+				}
+			}
+		}
+
 		server := mcp.NewServer(os.Stdin, os.Stdout, os.Stderr)
 
 		// Register login tool
