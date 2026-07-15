@@ -134,6 +134,11 @@ func selfUpdate(currentVersion string) error {
 	}
 
 	if err := updater.UpdateTo(context.Background(), latest, exe); err != nil {
+		// On Windows, if access is denied, try to re-run with elevated privileges
+		if runtime.GOOS == "windows" && isPermissionError(err) {
+			fmt.Println("\nAdmin privileges required. Requesting elevation...")
+			return runElevatedUpdate()
+		}
 		return fmt.Errorf("update failed: %w", err)
 	}
 
@@ -267,4 +272,34 @@ func getLatestVersionTag() string {
 		return ""
 	}
 	return s[:end]
+}
+
+// isPermissionError checks if an error is a permission/access denied error
+func isPermissionError(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.ToLower(err.Error())
+	return strings.Contains(msg, "access is denied") ||
+		strings.Contains(msg, "permission denied") ||
+		strings.Contains(msg, "access denied")
+}
+
+// runElevatedUpdate re-launches the update command with administrator privileges on Windows
+func runElevatedUpdate() error {
+	exe, err := os.Executable()
+	if err != nil {
+		return fmt.Errorf("cannot determine executable path: %w", err)
+	}
+
+	// Use PowerShell Start-Process with -Verb RunAs to trigger UAC elevation
+	psCmd := fmt.Sprintf(`Start-Process -FilePath '%s' -ArgumentList 'update','--force' -Verb RunAs -Wait`, exe)
+	cmd := exec.Command("powershell", "-Command", psCmd)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("elevated update failed: %w\nPlease run this command as Administrator:\n  racore-cli update", err)
+	}
+	fmt.Println("✓ Update completed with elevated privileges.")
+	return nil
 }
