@@ -36,8 +36,9 @@ var whoamiCmd = &cobra.Command{
 			fmt.Fprintf(os.Stderr, "%s\n", warning)
 		}
 
-		// Display masked access key
+		// Display masked access key and storage type
 		fmt.Printf("Access Key: %s\n", credential.MaskAccessKey(creds.AccessKey))
+		fmt.Printf("Storage: %s\n", store.StorageType())
 
 		// Calculate token status
 		remaining := creds.Expire - time.Now().Unix()

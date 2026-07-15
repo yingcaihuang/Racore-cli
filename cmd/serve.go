@@ -1552,6 +1552,7 @@ func executeWhoami() (string, error) {
 	}
 
 	buf.WriteString(fmt.Sprintf("Access Key: %s\n", credential.MaskAccessKey(creds.AccessKey)))
+	buf.WriteString(fmt.Sprintf("Storage: %s\n", store.StorageType()))
 
 	remaining := creds.Expire - time.Now().Unix()
 	if remaining >= 300 {

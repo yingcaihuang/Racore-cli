@@ -25,13 +25,18 @@ func TestNewStore(t *testing.T) {
 	}
 }
 
-func TestSaveAndLoad(t *testing.T) {
-	// Use a temp directory to avoid modifying real home directory
-	tmpDir := t.TempDir()
-	store := &Store{
-		dir:  tmpDir,
-		file: filepath.Join(tmpDir, "credentials"),
+// newFileOnlyStore creates a Store that uses file backend only (for testing without keyring dependency)
+func newFileOnlyStore(dir string) *Store {
+	return &Store{
+		useKeyring: false,
+		dir:        dir,
+		file:       filepath.Join(dir, "credentials"),
 	}
+}
+
+func TestSaveAndLoad(t *testing.T) {
+	tmpDir := t.TempDir()
+	store := newFileOnlyStore(tmpDir)
 
 	creds := &Credentials{
 		AccessKey: "test-access-key-12345",
@@ -78,10 +83,8 @@ func TestSaveAndLoad(t *testing.T) {
 
 func TestLoadNotExists(t *testing.T) {
 	tmpDir := t.TempDir()
-	store := &Store{
-		dir:  tmpDir,
-		file: filepath.Join(tmpDir, "nonexistent"),
-	}
+	store := newFileOnlyStore(tmpDir)
+	store.file = filepath.Join(tmpDir, "nonexistent")
 
 	creds, err := store.Load()
 	if err != nil {
@@ -94,10 +97,7 @@ func TestLoadNotExists(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	tmpDir := t.TempDir()
-	store := &Store{
-		dir:  tmpDir,
-		file: filepath.Join(tmpDir, "credentials"),
-	}
+	store := newFileOnlyStore(tmpDir)
 
 	// Save first
 	creds := &Credentials{AccessKey: "key", SecretKey: "secret"}
@@ -118,10 +118,8 @@ func TestDelete(t *testing.T) {
 
 func TestDeleteNotExists(t *testing.T) {
 	tmpDir := t.TempDir()
-	store := &Store{
-		dir:  tmpDir,
-		file: filepath.Join(tmpDir, "nonexistent"),
-	}
+	store := newFileOnlyStore(tmpDir)
+	store.file = filepath.Join(tmpDir, "nonexistent")
 
 	// Should not return error for nonexistent file
 	if err := store.Delete(); err != nil {
@@ -131,10 +129,7 @@ func TestDeleteNotExists(t *testing.T) {
 
 func TestCheckPermissions_Secure(t *testing.T) {
 	tmpDir := t.TempDir()
-	store := &Store{
-		dir:  tmpDir,
-		file: filepath.Join(tmpDir, "credentials"),
-	}
+	store := newFileOnlyStore(tmpDir)
 
 	// Write with 0600 permissions
 	if err := os.WriteFile(store.file, []byte("{}"), 0600); err != nil {
@@ -152,10 +147,7 @@ func TestCheckPermissions_Secure(t *testing.T) {
 
 func TestCheckPermissions_Insecure(t *testing.T) {
 	tmpDir := t.TempDir()
-	store := &Store{
-		dir:  tmpDir,
-		file: filepath.Join(tmpDir, "credentials"),
-	}
+	store := newFileOnlyStore(tmpDir)
 
 	// Write with overly permissive permissions
 	if err := os.WriteFile(store.file, []byte("{}"), 0644); err != nil {
@@ -168,6 +160,36 @@ func TestCheckPermissions_Insecure(t *testing.T) {
 	}
 	if warning == "" {
 		t.Error("CheckPermissions() returned no warning for 0644 file")
+	}
+}
+
+func TestCheckPermissions_Keyring(t *testing.T) {
+	tmpDir := t.TempDir()
+	store := &Store{
+		useKeyring: true,
+		dir:        tmpDir,
+		file:       filepath.Join(tmpDir, "credentials"),
+	}
+
+	// When using keyring, CheckPermissions should always return no warning
+	warning, err := store.CheckPermissions()
+	if err != nil {
+		t.Fatalf("CheckPermissions() returned error: %v", err)
+	}
+	if warning != "" {
+		t.Errorf("CheckPermissions() returned warning when using keyring: %q", warning)
+	}
+}
+
+func TestStorageType(t *testing.T) {
+	store := &Store{useKeyring: true}
+	if got := store.StorageType(); got != "system keyring" {
+		t.Errorf("StorageType() = %q, want %q", got, "system keyring")
+	}
+
+	store = &Store{useKeyring: false}
+	if got := store.StorageType(); got != "file (~/.racore/credentials)" {
+		t.Errorf("StorageType() = %q, want %q", got, "file (~/.racore/credentials)")
 	}
 }
 
@@ -205,8 +227,8 @@ func TestMaskAccessKey(t *testing.T) {
 	}{
 		{"", "****"},
 		{"abcd", "****"},
-		{"abcdefgh", "****"},     // exactly 8
-		{"abcdefghi", "abcd****fghi"}, // 9 characters
+		{"abcdefgh", "****"},           // exactly 8
+		{"abcdefghi", "abcd****fghi"},  // 9 characters
 		{"AKID12345678ABCD", "AKID****ABCD"},
 		{"123456789", "1234****6789"},
 	}

@@ -432,10 +432,15 @@ racore-cli/
 
 ## 安全说明
 
-- 凭证文件存储在 `~/.racore/credentials`，权限为 0600
+- 凭证优先存储在操作系统安全凭证管理器中：
+  - macOS: Keychain
+  - Windows: Credential Manager
+  - Linux: Secret Service (GNOME Keyring / KDE Wallet)
+- 无桌面环境时自动降级到文件存储（`~/.racore/credentials`，权限 0600）
 - Secret Key 在内存中使用后会被清零
 - Token 自动刷新，无需手动管理
-- 支持环境变量传入凭证，避免命令行历史泄露
+- 支持环境变量传入凭证（`RACORE_ACCESS_KEY` / `RACORE_SECRET_KEY`），避免持久化存储
+- `whoami` 命令可查看当前使用的存储后端
 
 ## 开发
 
