@@ -13,6 +13,12 @@ import (
 var rootCmd = &cobra.Command{
 	Use:           "racore-cli",
 	Short:         "Racore Cloud CDN management CLI with MCP protocol support",
+	Long: `Racore Cloud CDN management CLI with MCP protocol support.
+
+Manage CDN domains, certificates, cache, statistics, work orders, and logs
+through command line or AI agents via the MCP (Model Context Protocol).
+
+If you encounter any bugs, please report them to: yingcai.huang@verycloud.cn`,
 	Version:       "0.1.0",
 	SilenceUsage:  true,
 	SilenceErrors: true,
