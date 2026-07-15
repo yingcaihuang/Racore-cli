@@ -117,7 +117,7 @@ func registerDomainTools(server *mcp.Server) {
 
 	server.RegisterTool(mcp.ToolDefinition{
 		Name:        "domain-create",
-		Description: "Create a new CDN domain",
+		Description: "Create a new CDN domain. If cert_id is not provided, automatically matches a wildcard SSL certificate from the cert list (e.g., *.example.com matches sub.example.com). To manually specify, first use cert-list to find the certificate ID.",
 		InputSchema: json.RawMessage(`{
 			"type": "object",
 			"properties": {
@@ -125,7 +125,7 @@ func registerDomainTools(server *mcp.Server) {
 				"type": {"type": "string", "description": "CDN type: oversea, live, video/vod, dynamic, static, download, web/cdn"},
 				"source": {"type": "string", "description": "Origin source address (IP or domain)"},
 				"source_type": {"type": "string", "description": "Origin type: 1 (IP) or 2 (domain), default: 2"},
-				"cert_id": {"type": "string", "description": "SSL certificate ID to bind (enables HTTPS automatically)"}
+				"cert_id": {"type": "string", "description": "SSL certificate ID to bind (enables HTTPS automatically). If omitted, auto-matches wildcard cert from cert list."}
 			},
 			"required": ["domain", "type", "source"]
 		}`),
