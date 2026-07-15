@@ -17,7 +17,37 @@ import (
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start MCP server mode for AI agent communication",
+	Example: `  # Start with credentials from ~/.racore/credentials (requires prior login)
+  racore-cli serve
+
+  # Start with credentials via flags
+  racore-cli serve --access-key YOUR_KEY --secret-key YOUR_SECRET
+
+  # Start with credentials via environment variables
+  RACORE_ACCESS_KEY=key RACORE_SECRET_KEY=secret racore-cli serve
+
+  # MCP config with env vars (recommended for MCP servers):
+  # {
+  #   "mcpServers": {
+  #     "racore": {
+  #       "command": "racore-cli",
+  #       "args": ["serve"],
+  #       "env": {
+  #         "RACORE_ACCESS_KEY": "your_access_key",
+  #         "RACORE_SECRET_KEY": "your_secret_key"
+  #       }
+  #     }
+  #   }
+  # }`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// If credentials passed via flags, set them as env vars for the session
+		accessKey, _ := cmd.Flags().GetString("access-key")
+		secretKey, _ := cmd.Flags().GetString("secret-key")
+		if accessKey != "" && secretKey != "" {
+			os.Setenv("RACORE_ACCESS_KEY", accessKey)
+			os.Setenv("RACORE_SECRET_KEY", secretKey)
+		}
+
 		server := mcp.NewServer(os.Stdin, os.Stdout, os.Stderr)
 
 		// Register login tool
@@ -66,6 +96,8 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
+	serveCmd.Flags().String("access-key", "", "Racore Cloud access key (alternative to RACORE_ACCESS_KEY env var)")
+	serveCmd.Flags().String("secret-key", "", "Racore Cloud secret key (alternative to RACORE_SECRET_KEY env var)")
 	rootCmd.AddCommand(serveCmd)
 }
 

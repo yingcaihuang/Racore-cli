@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"text/tabwriter"
 
@@ -20,7 +21,17 @@ type apiResponse struct {
 }
 
 // newAuthenticatedClient loads credentials and returns a ready-to-use API client.
+// Priority: environment variables > credential file
 func newAuthenticatedClient() (*api.Client, error) {
+	// Priority 1: Environment variables (for MCP server mode)
+	envAccessKey := os.Getenv("RACORE_ACCESS_KEY")
+	envSecretKey := os.Getenv("RACORE_SECRET_KEY")
+	if envAccessKey != "" && envSecretKey != "" {
+		mgr := auth.NewManager(envAccessKey, envSecretKey)
+		return api.NewClient(mgr), nil
+	}
+
+	// Priority 2: Credential file (~/.racore/credentials)
 	store, err := credential.NewStore()
 	if err != nil {
 		return nil, fmt.Errorf("cannot initialize credential store: %w", err)
@@ -32,7 +43,7 @@ func newAuthenticatedClient() (*api.Client, error) {
 	}
 
 	if creds == nil {
-		return nil, fmt.Errorf("not logged in. Please run 'racore-cli login' first")
+		return nil, fmt.Errorf("not logged in. Please run 'racore-cli login' first, or set RACORE_ACCESS_KEY and RACORE_SECRET_KEY environment variables")
 	}
 
 	mgr := auth.NewManager(creds.AccessKey, creds.SecretKey)
