@@ -43,8 +43,12 @@ var domainListCmd = &cobra.Command{
 	Example: `  # List all domains
   racore-cli domain list
 
-  # Filter by domain name
-  racore-cli domain list --filter example.com`,
+  # Filter by exact domain name
+  racore-cli domain list --filter v1.bbc.cfai.work
+
+  # Fuzzy filter (partial match)
+  racore-cli domain list --filter v1.bbc
+  racore-cli domain list --filter cfai.work`,
 	RunE: runDomainList,
 }
 
@@ -654,6 +658,7 @@ func executeDomainList(filter string) (string, error) {
 		return "", err
 	}
 
+	// First try exact match via API (faster for exact domain names)
 	queryParams := make(map[string]string)
 	if filter != "" {
 		queryParams["domain"] = filter
@@ -677,18 +682,58 @@ func executeDomainList(filter string) (string, error) {
 	if err := json.Unmarshal(rawResp, &resp); err != nil {
 		return "", fmt.Errorf("failed to parse API response: %w", err)
 	}
+
+	// If exact match found or no filter, use the result directly
+	if resp.Code == 1 && len(resp.Data) > 0 {
+		headers := []string{"DOMAIN", "CNAME", "TYPE", "STATUS"}
+		rows := make([][]string, 0, len(resp.Data))
+		for _, d := range resp.Data {
+			rows = append(rows, []string{d.Name, d.Cname, d.Type, d.Status})
+		}
+		return formatTable(headers, rows), nil
+	}
+
+	// If no filter was specified and API returned error, report it
+	if filter == "" {
+		if resp.Code != 1 {
+			msg := resp.Message
+			if msg == "" {
+				msg = "the server returned an error with no details"
+			}
+			return "", fmt.Errorf("API error (code %d): %s", resp.Code, msg)
+		}
+		return "No domains found.\n", nil
+	}
+
+	// Fallback: fetch ALL domains and filter locally (fuzzy/contains match)
+	rawResp, err = client.Get("/API/cdn/domain", nil)
+	if err != nil {
+		return "", fmt.Errorf("API request failed: %w", err)
+	}
+
+	if err := json.Unmarshal(rawResp, &resp); err != nil {
+		return "", fmt.Errorf("failed to parse API response: %w", err)
+	}
 	if resp.Code != 1 {
 		msg := resp.Message
 		if msg == "" {
-			msg = "the server returned an error with no details. Check that the resource exists and parameters are correct"
+			msg = "the server returned an error with no details"
 		}
 		return "", fmt.Errorf("API error (code %d): %s", resp.Code, msg)
 	}
 
+	// Local fuzzy filter (case-insensitive contains)
+	lowerFilter := strings.ToLower(filter)
 	headers := []string{"DOMAIN", "CNAME", "TYPE", "STATUS"}
-	rows := make([][]string, 0, len(resp.Data))
+	rows := make([][]string, 0)
 	for _, d := range resp.Data {
-		rows = append(rows, []string{d.Name, d.Cname, d.Type, d.Status})
+		if strings.Contains(strings.ToLower(d.Name), lowerFilter) {
+			rows = append(rows, []string{d.Name, d.Cname, d.Type, d.Status})
+		}
+	}
+
+	if len(rows) == 0 {
+		return fmt.Sprintf("No domains matching '%s' found.\n", filter), nil
 	}
 	return formatTable(headers, rows), nil
 }

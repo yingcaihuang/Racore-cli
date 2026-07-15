@@ -42,24 +42,61 @@ func newAuthenticatedClient() (*api.Client, error) {
 }
 
 // checkAPIError returns a user-friendly error when an API response indicates failure.
-// It handles cases where the API returns an empty message by including the response body.
+// It handles cases where the API returns an empty message by including the response body,
+// and appends troubleshooting hints based on common error patterns.
 func checkAPIError(resp apiResponse, rawBody json.RawMessage) error {
 	if resp.Code == 1 {
 		return nil
 	}
-	if resp.Message != "" {
-		return fmt.Errorf("API error (code %d): %s", resp.Code, resp.Message)
+
+	msg := resp.Message
+
+	// If message is empty, try to extract from raw body {"error":"..."} pattern
+	if msg == "" {
+		var errBody struct {
+			Error string `json:"error"`
+		}
+		if json.Unmarshal(rawBody, &errBody) == nil && errBody.Error != "" {
+			msg = errBody.Error
+		}
 	}
-	// Try to provide useful context from the raw response
-	// Truncate if too long
-	body := strings.TrimSpace(string(rawBody))
-	if len(body) > 200 {
-		body = body[:200] + "..."
+
+	// If still empty, use truncated raw body as the message
+	if msg == "" {
+		body := strings.TrimSpace(string(rawBody))
+		if len(body) > 200 {
+			body = body[:200] + "..."
+		}
+		if body != "" && body != "{}" && body != "null" {
+			msg = body
+		} else {
+			msg = "the server returned an error with no details"
+		}
 	}
-	if body == "" || body == "{}" || body == "null" {
-		return fmt.Errorf("API request failed (code %d): the server returned an error with no details. Check that the resource exists and parameters are correct", resp.Code)
+
+	// Add troubleshooting hints based on common error patterns
+	hint := ""
+	lowerMsg := strings.ToLower(msg)
+	switch {
+	case strings.Contains(lowerMsg, "no data found") || strings.Contains(lowerMsg, "there is no data"):
+		hint = "\n  Hint: The requested resource may not exist, or the query parameters don't match any records.\n  Verify the domain name, time range, or other parameters are correct."
+	case strings.Contains(lowerMsg, "no information modified"):
+		hint = "\n  Hint: The configuration is already set to the requested value. No change was needed."
+	case strings.Contains(lowerMsg, "invalid parameter"):
+		hint = "\n  Hint: A parameter value is not accepted. Check the --config JSON field values.\n  Use '<command> --help' for valid options and examples."
+	case strings.Contains(lowerMsg, "missing parameters") || strings.Contains(lowerMsg, "missing parameter"):
+		hint = "\n  Hint: A required field is missing from the --config JSON.\n  Use '<command> --help' for the correct format and required fields."
+	case strings.Contains(lowerMsg, "please enable https") || strings.Contains(lowerMsg, "please enable ssl"):
+		hint = "\n  Hint: This feature requires HTTPS/SSL to be enabled first.\n  Run: racore-cli domain ssl set --domain <domain> --config '{\"is_ssl\":\"1\",\"cert_id\":\"<id>\"}'"
+	case strings.Contains(lowerMsg, "only be opened when") || strings.Contains(lowerMsg, "only be closed when"):
+		hint = "\n  Hint: The domain is not in the correct state for this operation.\n  Check current status: racore-cli domain list --filter <domain>"
+	case strings.Contains(lowerMsg, "not supported"):
+		hint = "\n  Hint: The parameter value is not in the accepted list.\n  Use '<command> --help' for valid options."
+	case strings.Contains(lowerMsg, "authentication") || strings.Contains(lowerMsg, "unauthorized") || strings.Contains(lowerMsg, "token"):
+		hint = "\n  Hint: Authentication issue. Try: racore-cli login"
 	}
-	return fmt.Errorf("API request failed (code %d): %s", resp.Code, body)
+
+	return fmt.Errorf("API error (code %d): %s%s", resp.Code, msg, hint)
 }
 
 // formatTable formats headers and rows into an aligned table using tabwriter.
