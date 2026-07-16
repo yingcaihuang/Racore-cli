@@ -24,6 +24,21 @@ If you encounter any bugs, please report them to: yingcai.huang@verycloud.cn`,
 	SilenceErrors: true,
 }
 
+func init() {
+	rootCmd.PersistentPostRun = func(cmd *cobra.Command, args []string) {
+		// Skip version check for non-interactive or self-referencing commands
+		name := cmd.Name()
+		if name == "serve" || name == "update" || name == "completion" || name == "help" {
+			return
+		}
+		// Skip if not running in an interactive terminal
+		if !isInteractiveTerminal() {
+			return
+		}
+		checkForUpdate()
+	}
+}
+
 // SetVersionInfo sets the version information from build-time ldflags.
 func SetVersionInfo(version, commit, date string) {
 	rootCmd.Version = fmt.Sprintf("%s (commit: %s, built: %s)", version, commit, date)
